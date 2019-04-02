@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<div>
+    <a href="{{ url_for('newRecipe')">
+        <button class='btn btn-default'>
+            Add Recipe
+        </button>
+    </a>
+</div>
+<div>
+    {% for recipe in recipes %}
+        <h3>{{recipe.name}}</h3>
+    {% endfor %}
+</div>
+
+{% end block %}
