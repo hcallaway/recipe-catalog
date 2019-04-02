@@ -271,15 +271,14 @@ def newRecipe():
     if request.method == 'POST':
         newRecipe = Recipe(
             name = request.form['name'],
-            # TODO add legit instructions once form is proper
-            instructions = 'test instructions',
-            # TODO add legit ingredients once form is proper
-            ingredients = 'test ingredients',
+            cook_time = request.form['cook_time'],
+            instructions = request.form['instructions'],
+            ingredients = request.form['ingredients'],
             # picture = request.form['picture'],
             user_id = login_session['user_id']
         )
         session.add(newRecipe)
-        ## TODO change Flash to alert
+        # TODO change Flash to alert
         flash('New recipe ({}) successfully created'.format(newRecipe.name))
         session.commit()
         return redirect(url_for('showRecipes'))
@@ -304,7 +303,7 @@ def editRecipe(recipe_id):
             </script>
             <body onload='myFunction()''>
         """
-        # FIXME post method is actually saving to DB
+        # FIXME post method isn't actually saving to DB
     if request.method == 'POST':
         if request.form['name']:
             editedRecipe.name = request.form['name']
@@ -325,7 +324,7 @@ def editRecipe(recipe_id):
 
 # Delete a recipe
 @app.route('/recipes/<int:recipe_id>/delete/', methods = ['GET', 'POST'])
-def deleteRecpe(recipe_id):
+def deleteRecipe(recipe_id):
     recipeToDelete = session.query(Recipe).filter_by(id = recipe_id).one()
     if 'username' not in login_session:
         return redirect('/login')
