@@ -255,7 +255,7 @@ def usersJSON():
 
 # Show all recipes
 @app.route('/')
-@app.route('/recipes/', methods = ['GET', 'POST'])
+@app.route('/recipes/')
 def showRecipes():
     recipes = session.query(Recipe).order_by(asc(Recipe.name))
     if 'username' not in login_session:
@@ -290,7 +290,7 @@ def newRecipe():
 # Edit a Recipe
 @app.route('/recipes/<int:recipe_id>/edit', methods = ['GET', 'POST'])
 def editRecipe(recipe_id):
-    editedRecipe = sesison.query(Recipe).filter_by(id = recipe_id).one()
+    editedRecipe = session.query(Recipe).filter_by(id = recipe_id).one()
     if 'username' not in login_session:
         return redirect('/login')
     if editedRecipe.user_id != login_session['user_id']:
@@ -304,12 +304,21 @@ def editRecipe(recipe_id):
             </script>
             <body onload='myFunction()''>
         """
+        # FIXME post method is actually saving to DB
     if request.method == 'POST':
         if request.form['name']:
             editedRecipe.name = request.form['name']
-            # TODO add instructions update
-            # TODO add alert for successful update
-            return redirect(url_for('showRecipes'))
+        if request.form['cook_time']:
+            editRecipe.cook_time = request.form['cook_time']
+        if request.form['ingredients']:
+            editRecipe.ingredients = request.form['ingredients']
+        if request.form['instructions']:
+            editRecipe.instructions = request.form['instructions']
+        session.add(editedRecipe)
+        session.commit()
+        print('Recipe successfully updated!')
+        # TODO add alert for successful update
+        return redirect(url_for('showRecipes'))
     else:
         return render_template('editRecipe.html', recipe = editedRecipe)
 

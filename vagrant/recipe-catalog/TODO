@@ -6,5 +6,8 @@ Todo:
   ☐ Build editRecipe.html
   ☐ Build deleteRecipe.html
   ☐ Update main.html to use bootstrap 4, different font
+  ☐ Make Delete recipe show up on home page (no separate page shit)
+  ☐ Add delete recipe button to edit recipe page also
+  ☐ Figure out OAuth issues?
   ☐ 
 
