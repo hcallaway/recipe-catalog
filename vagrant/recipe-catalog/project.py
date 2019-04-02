@@ -228,6 +228,8 @@ def gdisconnect():
 #
 #
 
+# Show all recipes
+
 @app.route('/')
 @app.route('/recipes/')
 def showRecipes():
@@ -237,6 +239,25 @@ def showRecipes():
         return render_template('publicRecipes.html', recipes = recipes)
     else:
         return render_template('recipes.html', recipes = recipes)
+
+# Create a New Recipe
+@app.route('/recipes/new/', methods = ['GET', 'POST'])
+def newRecipe():
+    if 'username' not in login_session:
+        return redirect('/login')
+    if request.method == 'POST':
+        newRecipe = Recipe(
+            name = request.form['name'],
+            instructions = request.form['instructions'],
+            # picture = request.form['picture'],
+            user_id = login_session['user_id']
+        )
+        session.add(newRecipe)
+        flash('New recipe ({}) successfully created'.format(newRecipe.name))
+        session.commit()
+        return redirect(url_for('showRecipes'))
+    else:
+        return render_template('newRecipe.html')
 
 #
 #
