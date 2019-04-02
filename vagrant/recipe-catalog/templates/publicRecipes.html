@@ -1,6 +1,15 @@
 {% extends "main.html" %}
 {% block content %}
-
-
+{% include "header.html" %}
+<div>
+    <button class='btn btn-default'>
+        Add Recipe
+    </button>
+</div>
+<div>
+    {% for recipe in recipes %}
+        <h3>{{recipe.name}}</h3>
+    {% endfor %}
+</div>
 
 {% end block %}
