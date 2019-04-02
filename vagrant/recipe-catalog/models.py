@@ -42,7 +42,9 @@ class Recipe(Base):
 
     id = Column(Integer, primary_key = True)
     name = Column(String(250), nullable = False)
-    instructions = Column(String(1000), nullable = False)
+    instructions = Column(String(2000), nullable = False)
+    cook_time = Column(String(100), nullable = True)
+    ingredients = Column(String(2000), nullable = False)
     picture = picture = Column(String(250))
     # User relationship
     user_id = Column(Integer, ForeignKey('user.id'))
@@ -55,35 +57,11 @@ class Recipe(Base):
         return {
             'name': self.name,
             'instructions': self.instructions,
+            'cook_time': self.cook_time,
+            'ingredients': self.ingredients,
             'picture': self.picture,
             'id': self.id
         }
-
-
-class Ingredient(Base):
-    # Set table name for reference
-    __tablename__ = 'ingredient'
-
-    id = Column(Integer, primary_key = True)
-    name = Column(String(250), nullable = False)
-    picture = Column(String(250))
-    # Recipe relationship
-    recipe_id = Column(Integer, ForeignKey('recipe.id'))
-    recipe = relationship(Recipe)
-    # User relationship
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
-
-    # ALlow for JSON enpoint
-    @property
-    def serialize(self):
-        """Return object data in easily seriablizable format"""
-        return {
-            'name': self.name,
-            'picture': self.picture,
-            'id': self.id
-        }
-
 
 engine = create_engine('sqlite:///recipes.db')
 
