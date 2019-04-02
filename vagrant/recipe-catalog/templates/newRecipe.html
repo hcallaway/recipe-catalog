@@ -11,13 +11,23 @@
 	</div>
 	<div class="row">
 		<div class="col-md-6 col-md-offset-1 padding-top">
-			<form action="#" method = "post">
+			<form action="{{ url_for('newRecipe')}}" method = "post">
 				<div class="form-group">
-				<label for="name">Name:</label>
-				<input type ="text" class="form-control" maxlength="100" name="name">
-				<div class="padding-bottom"></div>
-				<button type="submit" class="btn btn-default" id="submit" type="submit">
-				<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Create</button>
+					<label for="name">Name:</label>
+					<input type ="text" class="form-control" name="name" placeholder="Recipe Name Here">
+					<label for="cook_time">Cook Time:</label>
+					<input type="text" class="form-control" name="cook_time" placeholder="Prep: 20 minutes, Cook: 30 minutes">
+					<label for="ingredients">Ingredients:</label>
+					<input type="text" class="form-control" name="ingredients" placeholder="Paprika, Cumin, Ground Beef, Tortillas">
+					<label for="instructions">Instructions:</label>
+					<input type ="text" class ="form-control" name ="instructions" placeholder = "Write out all the instructions here! Browning meat, mixing sauces, etc.">
+					<div class="padding-bottom"></div>
+					<button type="submit" class="btn btn-default" id="submit" type="submit">
+					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>
+					<a href = '{{url_for('showRecipes')}}'>
+						<button class="btn btn-default delete">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+					</a>
 				</div>
 			</form>
 		</div>

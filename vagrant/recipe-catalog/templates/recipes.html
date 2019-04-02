@@ -11,6 +11,11 @@
 <div>
     {% for recipe in recipes %}
         <h3>{{recipe.name}}</h3>
+        <a href = "{{url_for('editRecipe', recipe_id = recipe.id)}}">
+            <button>
+                Edit Recipe
+            </button>
+        </a>
     {% endfor %}
 </div>
 
