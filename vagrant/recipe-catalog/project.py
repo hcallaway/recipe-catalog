@@ -209,6 +209,14 @@ def gdisconnect():
 #
 #
 
+# View All recipes JSON
+@app.route('/recipes.json/')
+def recipesJSON():
+    recipes = session.query(Recipes).all()
+    return jsonify(
+        recipes = [r.serialize for r in recipes]
+    )
+
 
 
 #
@@ -240,6 +248,7 @@ def showRecipes():
     else:
         return render_template('recipes.html', recipes = recipes)
 
+
 # Create a New Recipe
 @app.route('/recipes/new/', methods = ['GET', 'POST'])
 def newRecipe():
@@ -258,6 +267,33 @@ def newRecipe():
         return redirect(url_for('showRecipes'))
     else:
         return render_template('newRecipe.html')
+
+
+# Edit a Recipe
+@app.route('/recipes/<int:recipe_id>/edit', methods = ['GET', 'POST'])
+def editRecipe(recipe_id):
+    editedRecipe = sesison.query(Recipe).filter_by(id = recipe_id).one()
+    if 'username' not in login_session:
+        return redirect('/login')
+    if editedRecipe.user_id != login_session['user_id']:
+        return """
+            <script>
+                function myFunction() {
+                    alert(
+                        'You are not authorized to edit this recipe. Please create your own recipe in order to edit.'
+                        );
+                    }
+            </script>
+            <body onload='myFunction()''>
+        """
+    if request.method == 'POST':
+        if request.form['name']:
+            editedRecipe.name = request.form['name']
+            ## TODO add instructions update
+            ## TODO add alert for successful update
+            return redirect(url_for('showRecipes'))
+    else:
+        return render_template('editRecipe.html', recipe = editedRecipe)
 
 #
 #
