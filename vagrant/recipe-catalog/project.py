@@ -16,7 +16,7 @@ from models import Base, User, Recipe
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Recipe Application"
+APPLICATION_NAME = "Recipe App"
 
 
 # Connect to Database and create database session
@@ -35,12 +35,12 @@ session = DBSession()
 #
 
 # Create anti-forgery state token
-@app.route('/login')
+@app.route('/login/')
 def showLogin():
-    state = ''.join(
-        random.choice(string.ascii_uppercase + string.digits) for x in range(32))
+    # Create anti-forgery state token
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in range(32))
     login_session['state'] = state
-    # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
 
 @app.route('/gconnect', methods=['POST'])
@@ -50,9 +50,8 @@ def gconnect():
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    # Obtain authorization code, now compatible with Python3
-    request.get_data()
-    code = request.data.decode('utf-8')
+    # Obtain authorization code
+    code = request.data
 
     try:
         # Upgrade the authorization code into a credentials object
@@ -67,13 +66,10 @@ def gconnect():
 
     # Check that the access token is valid.
     access_token = credentials.access_token
-    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' % access_token)
-    # Submit request, parse response - Python3 compatible
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'.format(access_token))
     h = httplib2.Http()
-    response = h.request(url, 'GET')[1]
-    str_response = response.decode('utf-8')
-    result = json.loads(str_response)
-
+    print(h.request(url, 'GET')[1])
+    result = json.loads(h.request(url, 'GET')[1])
     # If there was an error in the access token info, abort.
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
@@ -92,23 +88,26 @@ def gconnect():
     if result['issued_to'] != CLIENT_ID:
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
+        print("Token's client ID does not match app's.")
         response.headers['Content-Type'] = 'application/json'
         return response
 
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'), 200)
+        response = make_response(json.dumps('Current user is already connected.'),200)
         response.headers['Content-Type'] = 'application/json'
+        login_session['user_id'] = getUserID(login_session['email'])
+        flash("You are logged in as %s" % login_session['username'])
         return response
 
     # Store the access token in the session for later use.
-    login_session['access_token'] = access_token
+    login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
     # Get user info
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
-    params = {'access_token': access_token, 'alt': 'json'}
+    params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
 
     data = answer.json()
@@ -116,33 +115,36 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-    # ADD PROVIDER TO LOGIN SESSION
-    login_session['provider'] = 'google'
 
-    # see if user exists, if it doesn't make a new one
-    user_id = getUserID(login_session['email'])
+    # Add user id to DB if not in DB already, and add id to login_session
+    user_id = getUserID(data['email'])
     if not user_id:
-        user_id = createUser(login_session)
-    login_session['user_id'] = user_id
+        added_user_id = createUser(login_session)
+        login_session['user_id'] = added_user_id
+    else:
+        login_session['user_id'] = user_id
 
-    # output = ''
-    # output += '<h1>Welcome, '
-    # output += login_session['username']
-    # output += '!</h1>'
-    # output += '<img src="'
-    # output += login_session['picture']
-    # output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    # flash("you are now logged in as %s" % login_session['username'])
-    # return output
-
+    output = ''
+    output += '<h1>Welcome, '
+    output += login_session['username']
+    output += '!</h1>'
+    output += '<img src="'
+    output += login_session['picture']
+    output += (' " style = "width: 300px; height: 300px;border-radius: 150px;'
+            '-webkit-border-radius: 150px;-moz-border-radius: 150px;"> ')
+    flash("You are now logged in as %s" % login_session['username'])
+    print("done!")
+    return output
 
 # User Helper Functions
+
 def createUser(login_session):
+    session = DBSession()
     newUser = User(
-        name=login_session['username'], 
+        name=login_session['username'],
         email=login_session['email'],
         picture=login_session['picture']
-    )
+        )
     session.add(newUser)
     session.commit()
     user = session.query(User).filter_by(email=login_session['email']).one()
@@ -150,52 +152,59 @@ def createUser(login_session):
 
 
 def getUserInfo(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
-    return user
+    session = DBSession()
+    return session.query(User).filter_by(id=user_id).one()
 
 
 def getUserID(email):
+    session = DBSession()
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
-    except:
+    except Exception:
         return None
 
-# DISCONNECT - Revoke a current user's token and reset their login_session
+#-----------------------------END LOG IN ROUTES -------------------------------
+
+#-----------------------------BEGIN LOG OUT ROUTES -----------------------------
+
 @app.route('/gdisconnect')
 def gdisconnect():
-        # Only disconnect a connected user.
     access_token = login_session.get('access_token')
     if access_token is None:
-        response = make_response(
-            json.dumps('Current user not connected.'), 401)
+        print("Access Token is None")
+        response = make_response(json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    print("In gdisconnect access token is %s" % (access_token))
+    print("User name is: ")
+    print(login_session['username'])
+    url = "https://accounts.google.com/o/oauth2/revoke?token={}" \
+        .format(login_session['access_token'])
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
+    print("result is ")
+    print(result)
     if result['status'] == '200':
-        # Reset the user's sesson.
         del login_session['access_token']
         del login_session['gplus_id']
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
     else:
-        # For whatever reason, the given token was invalid.
-        response = make_response(
-            json.dumps('Failed to revoke token for given user.', 400))
-        response.headers['Content-Type'] = 'application/json'
+        error_string = "Failed to revoke token for given user."
+        response = make_response(json.dumps(error_string), 400)
+        response.headers['Content-Type'] = "application/json"
         return response
 
+
 #
 #
 #
-#  End Login, Auth Section
+#-----------------------------END Auth ROUTES -------------------------------
 #
 #
 #
@@ -204,7 +213,7 @@ def gdisconnect():
 #
 #
 #
-#  Start JSON Endpoints
+#-----------------------------Start JSON Endpoints-------------------------------
 #
 #
 #
@@ -212,17 +221,25 @@ def gdisconnect():
 # View All recipes JSON
 @app.route('/recipes.json/')
 def recipesJSON():
-    recipes = session.query(Recipes).all()
+    recipes = session.query(Recipe).all()
     return jsonify(
         recipes = [r.serialize for r in recipes]
     )
 
 
+# View Users
+@app.route('/users.json/')
+def usersJSON():
+    users = session.query(User).all()
+    return jsonify(
+        users = [r.serialize for r in users]
+    )
+
 
 #
 #
 #
-#  End JSON Endpoints
+#-----------------------------End JSON Endpoints-------------------------------
 #
 #
 #
@@ -231,22 +248,20 @@ def recipesJSON():
 #
 #
 #
-#  Start Routes
+#-----------------------------Start Recipe App Routes-------------------------------
 #
 #
 #
 
 # Show all recipes
 @app.route('/')
-@app.route('/recipes/')
+@app.route('/recipes/', methods = ['GET', 'POST'])
 def showRecipes():
     recipes = session.query(Recipe).order_by(asc(Recipe.name))
-
     if 'username' not in login_session:
         return render_template('publicRecipes.html', recipes = recipes)
     else:
         return render_template('recipes.html', recipes = recipes)
-
 
 # Create a New Recipe
 @app.route('/recipes/new/', methods = ['GET', 'POST'])
@@ -256,7 +271,10 @@ def newRecipe():
     if request.method == 'POST':
         newRecipe = Recipe(
             name = request.form['name'],
-            instructions = request.form['instructions'],
+            # TODO add legit instructions once form is proper
+            instructions = 'test instructions',
+            # TODO add legit ingredients once form is proper
+            ingredients = 'test ingredients',
             # picture = request.form['picture'],
             user_id = login_session['user_id']
         )
@@ -289,8 +307,8 @@ def editRecipe(recipe_id):
     if request.method == 'POST':
         if request.form['name']:
             editedRecipe.name = request.form['name']
-            ## TODO add instructions update
-            ## TODO add alert for successful update
+            # TODO add instructions update
+            # TODO add alert for successful update
             return redirect(url_for('showRecipes'))
     else:
         return render_template('editRecipe.html', recipe = editedRecipe)
@@ -299,12 +317,33 @@ def editRecipe(recipe_id):
 # Delete a recipe
 @app.route('/recipes/<int:recipe_id>/delete/', methods = ['GET', 'POST'])
 def deleteRecpe(recipe_id):
-    recipeToDelete = session.query(Recipe)
+    recipeToDelete = session.query(Recipe).filter_by(id = recipe_id).one()
+    if 'username' not in login_session:
+        return redirect('/login')
+    if recipeToDelete.user_id != login_session['user_id']:
+        return """
+            <script>
+                function myFunction() {
+                    alert(
+                        'You are not authorized to delete this recipe. Please create your own recipe.'
+                    );
+                }
+            </script>
+            <body onload='myFunction()''>
+        """
+    if request.method == 'POST':
+        session.delete(recipeToDelete)
+        # TODO change from flash to alert
+        flash('{} successfully deleted'.format(recipeToDelete.name))
+        session.commit()
+        return redirect(url_for('showRecipes'))
+    else:
+        return render_template('deleteRecipe.html', recipe = recipeToDelete)
 
 #
 #
 #
-#  End Routes
+#-----------------------------END Recipe Routes-------------------------------
 #
 #
 #
