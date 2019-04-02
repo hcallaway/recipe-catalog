@@ -1,6 +1,6 @@
 <div class="row top-menu">
     <div class="col-md-6">
-        <a href="{{url_for('showRestaurants')}}">
+        <a href="{{url_for('showRecipes')}}">
             <span class="glyphicon glyphicon-home" aria-hidden="true"></span>Show All Restaurants
         </a>
     </div>
@@ -8,7 +8,7 @@
             {% if 'username' not in session %}
                 <a href="{{url_for('showLogin')}}">Login </a>
             {% else %}
-                <a href="{{url_for('disconnect')}}">Logout </a>
+                <a href="{{url_for('gdisconnect')}}">Logout </a>
             {% endif %}
     </div>
 </div>

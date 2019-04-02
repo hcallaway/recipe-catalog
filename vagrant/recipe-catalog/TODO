@@ -1,7 +1,10 @@
 
 Todo:
-  ☐ Add Recipe App to google oauth dashbonard so gconnect will work properly
-  ☐ Download client_secrets file to use
+  ✔ Add Recipe App to google oauth dashbonard so gconnect will work properly @done(19-04-02 14:04)
+  ✔ Download client_secrets file to use @done(19-04-02 14:04)
   ☐ Build recipes.html & publicRecipes.html
+  ☐ Build editRecipe.html
+  ☐ Build deleteRecipe.html
+  ☐ Update main.html to use bootstrap 4, different font
   ☐ 
 
