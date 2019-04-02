@@ -11,7 +11,7 @@ import json
 from flask import make_response
 import requests
 
-from models import Base, User, Recipe, Ingredient
+from models import Base, User, Recipe
 
 app = Flask(__name__)
 
@@ -237,7 +237,6 @@ def recipesJSON():
 #
 
 # Show all recipes
-
 @app.route('/')
 @app.route('/recipes/')
 def showRecipes():
@@ -262,6 +261,7 @@ def newRecipe():
             user_id = login_session['user_id']
         )
         session.add(newRecipe)
+        ## TODO change Flash to alert
         flash('New recipe ({}) successfully created'.format(newRecipe.name))
         session.commit()
         return redirect(url_for('showRecipes'))
@@ -294,6 +294,12 @@ def editRecipe(recipe_id):
             return redirect(url_for('showRecipes'))
     else:
         return render_template('editRecipe.html', recipe = editedRecipe)
+
+
+# Delete a recipe
+@app.route('/recipes/<int:recipe_id>/delete/', methods = ['GET', 'POST'])
+def deleteRecpe(recipe_id):
+    recipeToDelete = session.query(Recipe)
 
 #
 #
