@@ -16,7 +16,7 @@ from models import Base, User, Recipe, Ingredient
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Restaurant Menu Application"
+APPLICATION_NAME = "Recipe Application"
 
 
 # Connect to Database and create database session
