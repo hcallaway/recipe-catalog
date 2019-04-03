@@ -263,6 +263,24 @@ def showRecipes():
     else:
         return render_template('recipes.html', recipes = recipes)
 
+# Show specific category recipes
+@app.route('/recipes/<recipe_category>/')
+def showCategory(recipe_category):
+    recipesInCategory = session.query(Recipe).filter_by(category = recipe_category).all()
+    if 'username' not in login_session:
+        return render_template('publicRecipesInCategory.html', recipesInCategory = recipesInCategory)
+    else:
+        return render_template('recipesInCategory.html', recipesInCategory = recipesInCategory)
+
+# Show specific recipe
+@app.route('/recipes/<int:recipe_id>/')
+def showSingleRecipe(recipe_id):
+    recipe = session.query(Recipe).filter_by(id = recipe_id).one()
+    if 'username' not in login_session:
+        return render_template('publicViewRecipe.html', recipe = recipe)
+    else:
+        return render_template('viewRecipe.html', recipe = recipe)
+
 # Create a New Recipe
 @app.route('/recipes/new/', methods = ['GET', 'POST'])
 def newRecipe():
