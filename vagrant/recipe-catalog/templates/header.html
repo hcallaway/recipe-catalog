@@ -15,10 +15,10 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{{ url_for('showRecipes')}}">View All</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Vegan</a>
-                    <a class="dropdown-item" href="#">Keto</a>
-                    <a class="dropdown-item" href="#">Omnivore</a>
-                    <a class="dropdown-item" href="#">Junk Food</a>
+                    <a class="dropdown-item" href="{{ url_for('showCategory', recipe_category = 'Vegan')}}">Vegan</a>
+                    <a class="dropdown-item" href="{{ url_for('showCategory', recipe_category = 'Keto')}}">Keto</a>
+                    <a class="dropdown-item" href="{{ url_for('showCategory', recipe_category = 'Omnivore')}}">Omnivore</a>
+                    <a class="dropdown-item" href="{{ url_for('showCategory', recipe_category = 'Junk Food')}}">Junk Food</a>
                 </div>
             </li>
         </ul>
