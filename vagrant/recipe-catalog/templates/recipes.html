@@ -25,8 +25,7 @@
         </div>
         <div class="card-content">
             <div class="card-title">{{recipe.name}}</div>
-            <p class="card-text">This is some placement text to take up space and act as a generally good spot to have
-                things</p>
+            <p class="card-text">{{recipe.category}}</p>
             <div class="container card-btns">
                 <div class="row">
                     <a class="card-btn" href="{{url_for('editRecipe', recipe_id = recipe.id)}}">
