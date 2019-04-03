@@ -1,22 +1,48 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-<div>
-    <a href="{{ url_for('newRecipe')}}">
-        <button class='btn btn-default'>
-            Add Recipe
-        </button>
-    </a>
-</div>
-<div>
+<section>
+    <div class="container add-recipe">
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <a href="{{ url_for('newRecipe')}}">
+                    <button class='btn btn-primary btn-large btn-block'>
+                        Add Recipe
+                    </button>
+                </a>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+</section>
+<section class="cards">
     {% for recipe in recipes %}
-        <h3>{{recipe.name}}</h3>
-        <a href = "{{url_for('editRecipe', recipe_id = recipe.id)}}">
-            <button>
-                Edit Recipe
-            </button>
-        </a>
+    <div class="card">
+        <div class="card-image">
+            <img src="https://images.unsplash.com/photo-1506355683710-bd071c0a5828?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"
+                width=350 height=350>
+        </div>
+        <div class="card-content">
+            <div class="card-title">{{recipe.name}}</div>
+            <p class="card-text">This is some placement text to take up space and act as a generally good spot to have
+                things</p>
+            <div class="container card-btns">
+                <div class="row">
+                    <a href="{{url_for('editRecipe', recipe_id = recipe.id)}}">
+                        <button class='btn btn-primary card-btn'>
+                            Edit
+                        </button>
+                    </a>
+                    <a href="{{url_for('deleteRecipe', recipe_id = recipe.id)}}">
+                        <button class='btn btn-danger card-btn'>
+                            Delete
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endfor %}
-</div>
-
+</section>
 {% endblock %}
