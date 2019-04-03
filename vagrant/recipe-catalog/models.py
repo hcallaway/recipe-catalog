@@ -15,14 +15,6 @@ class User(Base):
     name = Column(String(100), nullable = False)
     email = Column(String(100), nullable = False)
     picture = Column(String(250))
-    # password_hash = Column(String(64))
-
-    # # Hashing for manual passwords
-    # def hash_password(self, password):
-    #     return pwd_context.verify(password, self.password_hash)
-
-    # def verify_password(self, password):
-    #     return pwd_context.verify(password, self.password_hash)
 
     # Allow for JSON endpoint
     @property
@@ -41,6 +33,7 @@ class Recipe(Base):
     __tablename__ = 'recipe'
 
     id = Column(Integer, primary_key = True)
+    category = Column(String(50), nullable = False)
     name = Column(String(250), nullable = False)
     instructions = Column(String(2000), nullable = False)
     cook_time = Column(String(100), nullable = True)
@@ -56,12 +49,14 @@ class Recipe(Base):
         """Return object data in easily serializable format"""
         return {
             'name': self.name,
+            'category': self.category,
             'instructions': self.instructions,
             'cook_time': self.cook_time,
             'ingredients': self.ingredients,
             'picture': self.picture,
             'id': self.id
         }
+
 
 engine = create_engine('sqlite:///recipes.db')
 

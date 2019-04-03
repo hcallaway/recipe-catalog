@@ -271,6 +271,7 @@ def newRecipe():
     if request.method == 'POST':
         newRecipe = Recipe(
             name = request.form['name'],
+            category = request.form['category'],
             cook_time = request.form['cook_time'],
             instructions = request.form['instructions'],
             ingredients = request.form['ingredients'],
@@ -279,7 +280,6 @@ def newRecipe():
         )
         session.add(newRecipe)
         # TODO change Flash to alert
-        flash('New recipe ({}) successfully created'.format(newRecipe.name))
         session.commit()
         return redirect(url_for('showRecipes'))
     else:
@@ -307,6 +307,8 @@ def editRecipe(recipe_id):
     if request.method == 'POST':
         if request.form['name']:
             editedRecipe.name = request.form['name']
+        if request.form['category']:
+            editedRecipe.category = request.form['category']
         if request.form['cook_time']:
             editRecipe.cook_time = request.form['cook_time']
         if request.form['ingredients']:
@@ -342,7 +344,6 @@ def deleteRecipe(recipe_id):
     if request.method == 'POST':
         session.delete(recipeToDelete)
         # TODO change from flash to alert
-        flash('{} successfully deleted'.format(recipeToDelete.name))
         session.commit()
         return redirect(url_for('showRecipes'))
     else:
