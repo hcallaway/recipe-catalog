@@ -2,12 +2,25 @@
 Todo:
   ✔ Add Recipe App to google oauth dashbonard so gconnect will work properly @done(19-04-02 14:04)
   ✔ Download client_secrets file to use @done(19-04-02 14:04)
-  ☐ Build recipes.html & publicRecipes.html
-  ☐ Build editRecipe.html
-  ☐ Build deleteRecipe.html
-  ☐ Update main.html to use bootstrap 4, different font
-  ☐ Make Delete recipe show up on home page (no separate page shit)
-  ☐ Add delete recipe button to edit recipe page also
+  ✔ Design recipes.html & publicRecipes.html @done(19-04-02 21:34)
+  ✔ Design editRecipe.html @started(19-04-03 11:12) @done(19-04-03 11:24) @lasted(12m46s)
+  ✔ Design newRecipe.html @done(19-04-03 11:51)
+  ✘ Design deleteRecipe.html @cancelled(19-04-03 11:54)
+  ✔ Update main.html to use bootstrap 4, different font @done(19-04-02 16:02)
+  ☐ Make Delete recipe buttons on home page work
+  ✘ Add delete recipe button to edit recipe page also @cancelled(19-04-03 11:25)
   ☐ Figure out OAuth issues?
-  ☐ 
-
+  ✘ Figure out how to do ingredients as adding individual items (WYSIWIG) @cancelled(19-04-03 11:11)
+  ✔ Come up with a few categories (vegan, keto, homestyle, etc.) that items can be sorted by @done(19-04-03 11:24)
+  ✘ Get WYSIWG as the instructions section @cancelled(19-04-03 11:11)
+  ✔ Add Category items and functionality to new recipes and edit recipes @started(19-04-03 11:55) @done(19-04-03 12:15) @lasted(20m5s)
+  ✔ Add Category functionality to pages (new page for each, /keto, /vegan, etc.) @done(19-04-03 12:29)
+  ✔ Add category links to header.html @done(19-04-03 12:29)
+  ☐ Make the cards clickable to view the recipes
+  ☐ Design viewRecipe (and public version)
+  ☐ Copy recipes into publicRecipes and remove admin buttons
+  ✘ Decide if you're putting a blurb or not in the database @cancelled(19-04-03 12:29)
+  ☐ Populate recipes and source images
+  ☐ Confirm image url adding/editing is nullable=false and working
+  ☐ Redo README
+  ☐ Fix saving/displaying issue with ingredients and instructions text

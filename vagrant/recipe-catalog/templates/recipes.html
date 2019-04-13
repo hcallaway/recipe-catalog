@@ -21,7 +21,7 @@
         <a href="{{ url_for('showSingleRecipe', recipe_id = recipe.id) }}">
             <div class="card">
                 <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1506355683710-bd071c0a5828?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"
+                    <img src="https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80"
                         width=350 height=350>
                 </div>
                 <div class="card-content">
@@ -35,7 +35,7 @@
                                 </button>
                             </a>
                             <a class="card-btn" href="{{url_for('deleteRecipe', recipe_id = recipe.id)}}">
-                                <button class='btn btn-danger card-btn'>
+                                <button class='btn btn-danger card-btn' name='delete' type="submit" value="{{recipe.id}}">
                                     Delete
                                 </button>
                             </a>

@@ -31,15 +31,15 @@ label {
     justify-content: space-evenly;
 }
 
-/* .ingredients {
-    width: 100%;
-    height: 10rem;
+.viewRecipe {
+    text-align: left;
+    
 }
 
-.instructions {
-    width: 100%;
-    height: 15rem;
-} */
+.recipeBackGround {
+    background-color: gray;
+    opacity: 0.4;
+}
 
 /* Background Image */
 
