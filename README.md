@@ -33,12 +33,12 @@ If you have any issues with the vagrant installation or configuration, you can v
 
 To view JSON endpoints, visit `localhost:5000/recipes.json` (for recipes) or `localhost:5000/users.json` to see list of users in the app
 
-![json-example](https://imgur.com/73i7W2t)
+![json-example](https://imgur.com/73i7W2t.jpg)
 
 You can add, edit, and delete recipes 
 
 View recipes based on category by clicking the categories dropdown in the navigation bar
 
-![categories-location](https://imgur.com/R26JwPm)
+![categories-location](https://imgur.com/R26JwPm.jpg)
 
 [(Back to TOC)](#table-of-contents)
