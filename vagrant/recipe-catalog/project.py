@@ -15,7 +15,8 @@ from models import Base, User, Recipe
 
 app = Flask(__name__)
 
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Recipe App"
 
 
@@ -34,6 +35,7 @@ session = DBSession()
 #
 #
 
+
 # Create anti-forgery state token
 @app.route('/login/')
 def showLogin():
@@ -42,6 +44,7 @@ def showLogin():
                     for x in range(32))
     login_session['state'] = state
     return render_template('login.html', STATE=state)
+
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -66,7 +69,9 @@ def gconnect():
 
     # Check that the access token is valid.
     access_token = credentials.access_token
-    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'.format(access_token))
+    url = (
+        'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'
+        .format(access_token))
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
     # If there was an error in the access token info, abort.
@@ -124,6 +129,7 @@ def gconnect():
 
 # User Helper Functions
 
+
 def createUser(login_session):
     session = DBSession()
     newUser = User(
@@ -150,9 +156,10 @@ def getUserID(email):
     except Exception:
         return None
 
-#-----------------------------END LOG IN ROUTES -------------------------------
+# --------------------------END LOG IN ROUTES ----------------------------
 
-#-----------------------------BEGIN LOG OUT ROUTES -----------------------------
+# --------------------------BEGIN LOG OUT ROUTES --------------------------
+
 
 @app.route('/gdisconnect')
 def gdisconnect():
@@ -191,7 +198,7 @@ def gdisconnect():
 #
 #
 #
-#-----------------------------END Auth ROUTES -------------------------------
+# --------------------------END Auth ROUTES ----------------------------
 #
 #
 #
@@ -200,7 +207,7 @@ def gdisconnect():
 #
 #
 #
-#-----------------------------Start JSON Endpoints-------------------------------
+# --------------------------Start JSON Endpoints----------------------------
 #
 #
 #
@@ -210,7 +217,7 @@ def gdisconnect():
 def recipesJSON():
     recipes = session.query(Recipe).all()
     return jsonify(
-        recipes = [r.serialize for r in recipes]
+        recipes=[r.serialize for r in recipes]
     )
 
 
@@ -219,14 +226,14 @@ def recipesJSON():
 def usersJSON():
     users = session.query(User).all()
     return jsonify(
-        users = [r.serialize for r in users]
+        users=[r.serialize for r in users]
     )
 
 
 #
 #
 #
-#-----------------------------End JSON Endpoints-------------------------------
+# --------------------------End JSON Endpoints----------------------------
 #
 #
 #
@@ -235,60 +242,70 @@ def usersJSON():
 #
 #
 #
-#-----------------------------Start Recipe App Routes-------------------------------
+# --------------------------Start Recipe App Routes----------------------------
 #
 #
 #
 
 # Show all recipes
-@app.route('/', methods = ['GET', 'POST'])
-@app.route('/recipes/', methods = ['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/recipes/', methods=['GET', 'POST'])
 def showRecipes():
     recipes = session.query(Recipe).order_by(asc(Recipe.name))
     # TODO: Uncomment once login issues are fixed
     # if 'username' not in login_session:
     #     return render_template('publicRecipes.html', recipes = recipes)
     if request.method == 'POST':
-        recipeToDelete = session.query(Recipe).filter_by(id = request.form['delete']).one()
+        recipeToDelete = session.query(Recipe).filter_by(
+            id=request.form['delete']).one()
         session.delete(recipeToDelete)
         session.commit()
         return redirect(url_for('showRecipes'))
     else:
-        return render_template('recipes.html', recipes = recipes)
+        return render_template('recipes.html', recipes=recipes)
+
 
 # Show specific category recipes
 @app.route('/recipes/<recipe_category>/')
 def showCategory(recipe_category):
-    recipesInCategory = session.query(Recipe).filter_by(category = recipe_category).all()
+    recipesInCategory = session.query(Recipe).filter_by(
+        category=recipe_category).all()
     # TODO: Uncomment once login issues are fixed
     # if 'username' not in login_session:
-    #     return render_template('publicRecipesInCategory.html', recipesInCategory = recipesInCategory)
+    #     return render_template(
+    #       'publicRecipesInCategory.html',
+    #       recipesInCategory=recipesInCategory
+    #   )
     # else:
-    return render_template('recipesInCategory.html', recipesInCategory = recipesInCategory)
+    return render_template(
+        'recipesInCategory.html', recipesInCategory=recipesInCategory
+        )
+
 
 # Show specific recipe
 @app.route('/recipes/<int:recipe_id>/')
 def showSingleRecipe(recipe_id):
-    recipe = session.query(Recipe).filter_by(id = recipe_id).one()
+    recipe = session.query(Recipe).filter_by(id=recipe_id).one()
     # TODO: Uncomment once login issues are fixed
     # if 'username' not in login_session:
     #     return render_template('publicViewRecipe.html', recipe = recipe)
     # else:
-    return render_template('viewRecipe.html', recipe = recipe)
+    return render_template('viewRecipe.html', recipe=recipe)
+
 
 # Create a New Recipe
-@app.route('/recipes/new/', methods = ['GET', 'POST'])
+@app.route('/recipes/new/', methods=['GET', 'POST'])
 def newRecipe():
     # TODO: Uncomment once login issues are fixed
     # if 'username' not in login_session:
     # return redirect('/login')
     if request.method == 'POST':
         newRecipe = Recipe(
-            name = request.form['name'],
-            category = request.form['category'],
-            cook_time = request.form['cook_time'],
-            instructions = request.form['instructions'],
-            ingredients = request.form['ingredients'],
+            name=request.form['name'],
+            category=request.form['category'],
+            cook_time=request.form['cook_time'],
+            instructions=request.form['instructions'],
+            ingredients=request.form['ingredients'],
             # picture = request.form['picture'],
             # user_id = login_session['user_id']
         )
@@ -300,9 +317,9 @@ def newRecipe():
 
 
 # Edit a Recipe
-@app.route('/recipes/<int:recipe_id>/edit', methods = ['GET', 'POST'])
+@app.route('/recipes/<int:recipe_id>/edit', methods=['GET', 'POST'])
 def editRecipe(recipe_id):
-    editedRecipe = session.query(Recipe).filter_by(id = recipe_id).one()
+    editedRecipe = session.query(Recipe).filter_by(id=recipe_id).one()
     # TODO: Uncomment once login issues are fixed
     # if 'username' not in login_session:
     #     return redirect('/login')
@@ -311,7 +328,10 @@ def editRecipe(recipe_id):
     #         <script>
     #             function myFunction() {
     #                 alert(
-    #                     'You are not authorized to edit this recipe. Please create your own recipe in order to edit.'
+    #                     '''
+    #                       You are not authorized to edit this recipe.
+    #                       Please create your own recipe in order to edit.
+    #                     '''
     #                     );
     #                 }
     #         </script>
@@ -335,13 +355,13 @@ def editRecipe(recipe_id):
         session.commit()
         return redirect(url_for('showRecipes'))
     else:
-        return render_template('editRecipe.html', recipe = editedRecipe)
+        return render_template('editRecipe.html', recipe=editedRecipe)
 
 
 # Delete a recipe
-@app.route('/recipes/<int:recipe_id>/delete/', methods = ['GET', 'POST'])
+@app.route('/recipes/<int:recipe_id>/delete/', methods=['GET', 'POST'])
 def deleteRecipe(recipe_id):
-    recipeToDelete = session.query(Recipe).filter_by(id = recipe_id).one()
+    recipeToDelete = session.query(Recipe).filter_by(id=recipe_id).one()
     # TODO: Uncomment once login issues are fixed
     # if 'username' not in login_session:
     #     return redirect('/login')
@@ -350,7 +370,10 @@ def deleteRecipe(recipe_id):
     #         <script>
     #             function myFunction() {
     #                 alert(
-    #                     'You are not authorized to delete this recipe. Please create your own recipe.'
+    #                     '''
+    #                       You are not authorized to delete this recipe.
+    #                       Please create your own recipe.
+    #                     '''
     #                 );
     #             }
     #         </script>
@@ -361,15 +384,16 @@ def deleteRecipe(recipe_id):
         session.commit()
         return redirect(url_for('showRecipes'))
     else:
-        return render_template('deleteRecipe.html', recipe = recipeToDelete)
+        return render_template('deleteRecipe.html', recipe=recipeToDelete)
 
 #
 #
 #
-#-----------------------------END Recipe Routes-------------------------------
+# -----------------------------END Recipe Routes-------------------------------
 #
 #
 #
+
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
