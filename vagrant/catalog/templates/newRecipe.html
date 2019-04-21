@@ -1,0 +1,58 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<h1>New Recipe</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6 padding-top">
+            <form action="{{ url_for('newRecipe') }}" method = "post">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type ="text" class="form-control" name="name" placeholder="Your Cool Recipe">
+                    <label for="category">Category:</label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="category" id="vegan" value="Vegan">
+                            Vegan
+                        </label>
+                        <label>
+                            <input type="radio" name="category" id="keto" value="Keto">
+                            Keto
+                        </label>
+                        <label>
+                            <input type="radio" name="category" id="omnivore" value="Omnivore">
+                            Omnivore
+                        </label>
+                        <label>
+                            <input type="radio" name="category" id="junkfood" value="Junk Food">
+                            Junk Food
+                        </label>
+                    </div>
+                    <label for="cook_time">Cook Time:</label>
+                    <input type="text" class="form-control" name="cook_time" placeholder="1h, 20mins">
+                    <label for="ingredients">Ingredients:</label>
+                    <textarea class="form-control" name="ingredients" placeholder="Sugar, Spice, All Things Nice"></textarea>
+                    <label for="instructions">Instructions:</label>
+                    <textarea class="form-control" name="instructions" placeholder="Preheat oven to 450. Prep items. Bake for 20 minutes uncovered.">
+						</textarea>
+                    <div class="container submit-btns">
+                        <div class="row submit-btn">
+                            <button type="submit" class="btn btn-primary" id="submit" type="submit">
+                                Save
+                            </button>
+                            <a href = '{{url_for('showRecipes')}}'>
+                                <button class="btn btn-danger delete">
+                                    Cancel
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<h1>Edit {{recipe.name}}</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6 padding-top">
+            <form action="{{ url_for('editRecipe',recipe_id = recipe.id)}}" method = "post">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type ="text" class="form-control" name="name" value="{{recipe.name }}">
+                    <label for="category">Category:</label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="category" id="vegan" value="Vegan" {% if recipe.category == 'Vegan'%}checked{%endif%}>
+                            Vegan
+                        </label>
+                        <label>
+                            <input type="radio" name="category" id="keto" value="Keto" {% if recipe.category == 'Keto'%}checked{%endif%}>
+                            Keto
+                        </label>
+                        <label>
+                            <input type="radio" name="category" id="omnivore" value="Omnivore" {% if recipe.category == 'Omnivore'%}checked{%endif%}>
+                            Omnivore
+                        </label>
+                        <label>
+                            <input type="radio" name="category" id="junkfood" value="Junk Food" {% if recipe.category == 'Junk Food'%}checked{%endif%}>
+                            Junk Food
+                        </label>
+                    </div>
+                    <label for="cook_time">Cook Time:</label>
+                    <input type="text" class="form-control" name="cook_time" value="{{recipe.cook_time}}">
+                    <label for="ingredients">Ingredients:</label>
+                    <input type="text" class="form-control" name="ingredients" value="{{recipe.ingredients}}">
+                    <label for="instructions">Instructions:</label>
+                    <input type="text" class ="form-control" name="instructions" value="{{recipe.instructions}}">
+                    <div class="container submit-btns">
+                        <div class="row submit-btn">
+                            <button type="submit" class="btn btn-primary" id="submit" type="submit">
+                                Save
+                            </button>
+                            <a href = '{{url_for('showRecipes')}}'>
+                                <button class="btn btn-danger delete">
+                                    Cancel
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+{% endblock %}

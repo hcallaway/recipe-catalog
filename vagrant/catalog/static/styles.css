@@ -1,0 +1,116 @@
+/* NavBar Hover */
+.dropdown-item:hover {
+    background-color: #346288;
+    color: white;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Edit Recipes */
+
+h1 {
+    text-align: center;
+    margin: 2rem;
+    color: white;
+    font-weight: 600;
+}
+
+label {
+    margin: 1rem 0 0 0;
+}
+
+.submit-btns {
+    margin-top: 1rem;
+}
+
+.submit-btn {
+    justify-content: space-evenly;
+}
+
+.viewRecipe {
+    text-align: left;
+    
+}
+
+.recipeBackGround {
+    background-color: gray;
+    opacity: 0.4;
+}
+
+/* Background Image */
+
+body {
+    background-image: url(https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9);
+    background-size: 100%;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* FlexBox for Recipes Home Page! */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    background: transparent;
+}
+
+.card {
+    flex: 0 0 350px;
+    background-color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 20px 40px -14px rgba(0,0,0,0.25);
+    margin: 30px 30px
+}
+
+.add-recipe {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+/* Card Content */
+.card-title{
+    padding: .5rem .5rem 0 .5rem;
+    color: #696969;
+    font-size: 1.25rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.card-text {
+    padding: 0 .5rem;
+    color: #696969;
+}
+
+.card-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.card-btn {
+    margin: 0 1rem .25rem 1rem;
+}
+
+/* Button Adjusts */
+.btn-primary {
+    background-color: #346288;
+    border-color: #346288;
+}
+
+.btn-danger {
+    background-color: #D37147;
+    border-color: #D37147;
+}

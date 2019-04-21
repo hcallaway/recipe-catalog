@@ -1,0 +1,28 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<div class="container">
+    <div class="row">
+        <div class='col-3'></div>
+        <div class='col-6'>
+            <h1>{{recipe.name}}</h1>
+        </div>
+        <div class='col-3'></div>
+    </div>
+</div>
+<section class="cards">
+    <div class="card">
+        <div class="card-image">
+            <img src="https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80"
+                width=350 height=350>
+        </div>
+        <div class="card-content">
+            <div class="card-title">{{recipe.name}}</div>
+            <p class="card-text">{{recipe.category}}</p>
+            <p class="card-text">{{recipe.cook_time}}</p>
+            <p class="card-text">{{recipe.ingredients}}</p>
+            <p class="card-text">{{recipe.instructions}}</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

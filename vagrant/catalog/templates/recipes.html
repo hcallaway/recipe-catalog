@@ -1,0 +1,49 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<section>
+    <div class="container add-recipe">
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <a href="{{ url_for('newRecipe')}}">
+                    <button class='btn btn-primary btn-large btn-block'>
+                        Add Recipe
+                    </button>
+                </a>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+</section>
+<section class="cards">
+    {% for recipe in recipes %}
+        <a href="{{ url_for('showSingleRecipe', recipe_id = recipe.id) }}">
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80"
+                        width=350 height=350>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">{{recipe.name}}</div>
+                    <p class="card-text">{{recipe.category}}</p>
+                    <div class="container card-btns">
+                        <div class="row">
+                            <a class="card-btn" href="{{url_for('editRecipe', recipe_id = recipe.id)}}">
+                                <button class='btn btn-primary card-btn'>
+                                    Edit
+                                </button>
+                            </a>
+                            <a class="card-btn" href="{{url_for('deleteRecipe', recipe_id = recipe.id)}}">
+                                <button class='btn btn-danger card-btn' name='delete' type="submit" value="{{recipe.id}}">
+                                    Delete
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+</section>
+{% endblock %}
